@@ -1,0 +1,30 @@
+// Original procedural SVG artwork used by the prototype.
+const svgWrap = (content, label, extra='') => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-label="${label}" ${extra}>${content}</svg>`;
+const defs = `<defs><filter id="shadow"><feGaussianBlur stdDeviation="12"/></filter><linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e2e4da"/><stop offset=".48" stop-color="#b2b7a5"/><stop offset="1" stop-color="#77806e"/></linearGradient><linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5f6ef"/><stop offset="1" stop-color="#d7e3db"/></linearGradient><linearGradient id="dark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#454c40"/><stop offset="1" stop-color="#202b25"/></linearGradient></defs>`;
+
+function torus(cx=320,cy=245,scale=1,base=[239,84,46]) {
+  const faces=[], n=80,m=18;
+  function point(u,v){
+    let x=(133+39*Math.cos(v))*Math.cos(u), y=(133+39*Math.cos(v))*Math.sin(u), z=39*Math.sin(v);
+    const a=.72,b=-.48;
+    let yy=y*Math.cos(a)-z*Math.sin(a),zz=y*Math.sin(a)+z*Math.cos(a);
+    let xx=x*Math.cos(b)+zz*Math.sin(b), z2=-x*Math.sin(b)+zz*Math.cos(b);
+    return [cx+scale*xx,cy+scale*yy, z2];
+  }
+  for(let i=0;i<n;i++)for(let j=0;j<m;j++){
+    const u=i/n*Math.PI*2,v=j/m*Math.PI*2;
+    const pts=[point(u,v),point(u+2*Math.PI/n,v),point(u+2*Math.PI/n,v+2*Math.PI/m),point(u,v+2*Math.PI/m)];
+    const light=.68+.22*Math.cos(v-1.0)+.15*Math.sin(u+1.2);
+    const c=base.map(x=>Math.max(0,Math.min(255,Math.round(x*light+12))));
+    faces.push({z:pts.reduce((s,p)=>s+p[2],0)/4,content:`<polygon points="${pts.map(p=>p.slice(0,2).map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="rgb(${c})" stroke="rgb(${c})" stroke-width=".6"/>`});
+  }
+  return faces.sort((a,b)=>a.z-b.z).map(f=>f.content).join('');
+}
+
+function art(type){
+ if(type==='hero'||type==='orbit')return svgWrap(`${defs}<ellipse cx="333" cy="426" rx="155" ry="20" fill="#253126" opacity=".15" filter="url(#shadow)"/><path d="M243 337 351 307 439 353 330 387Z" fill="#444d40"/><path d="M243 337 330 387 330 416 243 366Z" fill="#283329"/><path d="M330 387 439 353 439 382 330 416Z" fill="#171f19"/><path d="M302 340 322 330 322 229 302 236Z" fill="#757d6a"/><path d="M322 330 338 339 338 237 322 229Z" fill="#394335"/>${torus(320,227,1.08)}<circle cx="327" cy="365" r="5" fill="#a7b393"/><path d="M132 384h70m-35-35v70M447 146h50m-25-25v50" stroke="#6d7864" stroke-width="1" opacity=".5"/><path d="M155 164 230 124M432 345l59-32" stroke="#6d7864" opacity=".5"/><circle cx="155" cy="164" r="3" fill="none" stroke="#6d7864"/><text x="105" y="148" font-family="monospace" font-size="9" fill="#6d7864">R. 133</text><text x="475" y="302" font-family="monospace" font-size="9" fill="#6d7864">01 / UY</text>`, 'Original orange toroidal sculpture on a dark geometric base');
+ if(type==='fold')return svgWrap(`${defs}<ellipse cx="333" cy="438" rx="170" ry="18" fill="#4e5b3c" opacity=".18" filter="url(#shadow)"/><path d="M173 184 359 113 470 170 285 246Z" fill="#e5e7d9"/><path d="M285 246 470 170 430 342 249 419Z" fill="url(#metal)"/><path d="M173 184 285 246 249 419 141 357Z" fill="#a7b099"/><path d="M211 218 247 239 220 367 182 345Z" fill="#59674c"/><path d="M321 264 419 223 398 316 301 356Z" fill="#879477"/><path d="M321 264 334 273 429 233 419 223Z" fill="#5e6d53"/><path d="M301 356 315 361 334 273 321 264Z" fill="#b9c2ac"/><path d="M173 184 359 113 470 170M285 246 249 419" stroke="#f6f6eb" fill="none" stroke-width="1.5"/><path d="M141 430h322M141 424v12m322-12v12" stroke="#7a886e" stroke-width=".7"/><text x="280" y="451" fill="#738168" font-size="9" font-family="monospace" letter-spacing="2">ONE SURFACE / MANY POSSIBILITIES</text>`, 'Original folded sheet sculpture in sage green');
+ if(type==='field')return svgWrap(`${defs}<ellipse cx="329" cy="452" rx="180" ry="16" fill="#243b50" opacity=".15" filter="url(#shadow)"/><g transform="translate(92 81) rotate(-8 210 180)"><rect x="28" y="18" width="422" height="313" rx="9" fill="#a5b7c1"/><rect width="422" height="313" rx="9" fill="#f0f1e9"/><path d="M0 42h422" stroke="#d0d4c9"/><circle cx="18" cy="21" r="3" fill="#ee5b36"/><circle cx="30" cy="21" r="3" fill="#c2c6ba"/><circle cx="42" cy="21" r="3" fill="#c2c6ba"/><text x="348" y="25" font-family="monospace" font-size="8" fill="#5f6e5a">FIELD / 01</text><text x="26" y="88" font-family="sans-serif" font-size="28" letter-spacing="-1" fill="#28352c">Small observations.</text><text x="26" y="112" font-family="sans-serif" font-size="11" fill="#73816c">Room for the things you notice.</text><rect x="26" y="139" width="169" height="147" rx="3" fill="#d6dec7"/><path d="M91 252c-25-34 8-51 21-84 32 32 37 56-3 84" fill="#798e60"/><path d="M105 273v-68" fill="none" stroke="#4b5e3e"/><text x="39" y="273" font-family="monospace" font-size="7" fill="#4c5f40">01 / A WALK OUTSIDE</text><rect x="207" y="139" width="189" height="70" rx="3" fill="#e4d4bf"/><path d="M228 174h109m-109 9h145m-145 9h88" stroke="#a59176" stroke-width="2"/><text x="221" y="157" font-family="monospace" font-size="7" fill="#7b694f">THOUGHTS IN PROGRESS</text><rect x="207" y="221" width="189" height="65" rx="3" fill="#343f35"/><text x="222" y="249" font-family="sans-serif" font-size="13" fill="#e6eada">Make space for an idea.</text><path d="M365 258h14m-7-7 7 7-7 7" stroke="#b9c9ab" fill="none"/></g>`, 'Original concept interface for Field Notes, with observation cards');
+ let lines=''; for(let i=0;i<58;i++){let d='';for(let j=0;j<=80;j++){const x=98+j*5.5;const y=90+i*6.2 + Math.sin(j*.105+i*.075)*32*Math.sin(j/80*Math.PI)+Math.cos(j*.17+i*.12)*18;d+=(j?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' ';}lines+=`<path d="${d}" fill="none" stroke="${i%8===0?'#f17a42':'#bdc8a9'}" opacity="${.45+i/140}" stroke-width="1.2"/>`;}
+ return svgWrap(`<circle cx="330" cy="260" r="190" fill="#a6b393" opacity=".03"/>${lines}<text x="98" y="480" fill="#a5b69c" font-size="9" font-family="monospace" letter-spacing="2">SIMPLE RULES. UNEXPECTED PATTERNS.</text>`, 'Original generative line field in cream and orange on deep green');
+}
