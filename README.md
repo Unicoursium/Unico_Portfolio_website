@@ -62,7 +62,7 @@ For GitHub's publishing-source instructions, see [Configuring a publishing sourc
 ## Editing content
 
 - **Identity and page copy:** edit `docs/index.html`.
-- **Projects:** edit the `projects` array in `docs/assets/js/projects.js`. Each item has a unique `id`, a title, a filter category, a label, a background colour and case-study text.
+- **Projects:** edit the `projects` array in `docs/assets/js/projects.js`. Mark illustrative placeholders with `demo: true`; only real projects (without that flag, or with `demo: false`) contribute to the homepage portfolio total. Until real projects are added, the homepage shows a coming-soon message. Each item has a unique `id`, a title, a filter category, a label, a background colour and case-study text.
 - **Visuals:** the current sample illustrations come from `art()` in `docs/assets/js/art.js`. Add real photographs to `docs/assets/images/` and update rendering in `docs/assets/js/app.js` when replacing the sample artwork. Adding a photograph to the folder alone does not display it.
 - **Styling:** edit `docs/assets/css/style.css`. Theme colours are defined at the top.
 - **Project count:** when adding or removing projects, update the initial counts in `docs/index.html` as well. Filter results are calculated dynamically.

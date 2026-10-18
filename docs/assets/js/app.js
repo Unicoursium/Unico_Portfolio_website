@@ -1,5 +1,11 @@
 const $ = (s, root = document) => root.querySelector(s);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Demo studies do not count towards the personal portfolio total.
+const portfolioProjectCount = projects.filter(project => project.demo !== true).length;
+if (portfolioProjectCount > 0) {
+ $('#portfolio-summary').textContent = `Explore the portfolios and reports behind my ${portfolioProjectCount} ${portfolioProjectCount === 1 ? 'project' : 'projects'} below.`;
+}
+
 $('#hero-art').innerHTML=art('hero');
 const grid=$('#project-grid');
 grid.innerHTML=projects.map((p,i)=>`<article class="project-card reveal" data-category="${p.category}"><button class="project-button" data-project="${p.id}" aria-label="Explore ${p.title}, illustrative project"><div class="project-art" style="background:${p.bg}"><span class="art-index" style="${p.id==='signal'?'color:#c9d2bb':''}">STUDY / 00${i+1}</span>${art(p.id)}<span class="art-open" aria-hidden="true">↗</span></div><div class="project-meta"><span>${p.label}</span><span>ILLUSTRATIVE STUDY</span></div><div class="project-title"><h3>${p.title}</h3><span aria-hidden="true">↗</span></div></button><p class="project-description">${p.desc}</p></article>`).join('');
